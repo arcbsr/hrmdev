@@ -120,7 +120,7 @@ class GetDataZK(APIView):
 
     def get(self, request):
         conn = None
-        zk = ZK('192.168.0.201', port=4370, timeout=5, password=0, force_udp=False, ommit_ping=False)
+        zk = ZK('159.65.217.206', port=4370, timeout=5, password=0, force_udp=False, ommit_ping=False)
         try:
             # connect to device
             conn = zk.connect()
