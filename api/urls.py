@@ -19,6 +19,6 @@ urlpatterns = [
     path('manager', ManagerView.as_view()),
     path('forgot_password', ForgotPasswordView.as_view()),
     path('submit_kpi',SubmitKPIView.as_view()),
-    path('zksync',GetDataZK.as_view()),
+    path('zksync/',GetDataZK.as_view()),
 
 ]
