@@ -3,3 +3,4 @@ from .profile import Employee
 from .department import Department
 from .leave import Leave
 from .kpi import KPI
+from .attendance import Attendance

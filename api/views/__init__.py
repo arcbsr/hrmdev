@@ -5,3 +5,4 @@ from .department import DepartmentViewSet
 from .kpi import KPIViewSet,RequestedKPIViewSet,SubmitKPIView,GetDataZK
 from .leave import LeaveViewSet,RequestedLeaveViewSet
 from .forgot_password import ForgotPasswordView
+from .Attendence import GetRepotFP
