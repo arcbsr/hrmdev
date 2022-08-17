@@ -122,12 +122,13 @@ class GetDataZK(APIView):
     authentication_classes = []
 
     def post(self, request):
-        print(request.data)
+        # print(request.data)
         emp = Employee.objects.all()
         new_employee_list = []
-        for employee in emp:
-            new_employee_list.append(EmployeeSerializer(employee).data)
-        return Response({"message": {"lastsaved":"2022-08-15 00:00:00", "emp": new_employee_list}})
+        # for employee in emp:
+        #     new_employee_list.append(EmployeeSerializer(employee).data)
+        atn= AttendanceSerializer(Attendance.objects.all().last()) .data
+        return Response({"message": {"lastsaved": atn['lastdate'] or "", "emp": new_employee_list}})
 
 
     def get(self, request): 
@@ -158,13 +159,18 @@ class AddAttendanceFromZK(APIView):
             emp = Employee.objects.filter(id_number = emp_id).order_by('id').first()
             atnd = Attendance ()
             atnd.employee = emp
-            atnd.lastdate = "2022-08-15 00:00:00"
             atnd.terminal_sn = val['terminal_sn']
             atnd.terminal_name = val['terminal_alias']
             if val['punch_state'] == "0":
                 atnd.intime = val['punch_time']
+                atnd.lastdate = val['punch_time']
+
+
             elif val['punch_state'] == "1":
                 atnd.outtime = val['punch_time']
+                atnd.lastdate = val['punch_time']
+
+
             ds.append(AttendanceSerializer(atnd).data)
             atnd.save()
 
