@@ -10,6 +10,7 @@ from rest_framework import generics
 from rest_framework.parsers import JSONParser, MultiPartParser, FileUploadParser, FormParser
 from rest_framework import parsers
 import json
+from rest_framework.response import Response
 
 class MultipartJsonParser(MultiPartParser):
 
@@ -181,7 +182,7 @@ class EmployeeViewSet(
 
     def get_queryset(self):
         qs = Employee.objects.all()
-        return qs
+        return qs 
         # user = self.request.user
         # store = self.request.META.get('HTTP_STORE_ID', None)
         # if user.user_store_permissions.filter(store=store).exists():
@@ -190,7 +191,7 @@ class EmployeeViewSet(
         #         return qs
         #
         # return []
-
+    
     # def get_serializer_context(self):
     #     context = super(EViewSet, self).get_serializer_context()
     #     context['store_id'] = self.request.META.get('HTTP_STORE_ID', None)

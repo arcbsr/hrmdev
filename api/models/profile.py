@@ -62,10 +62,10 @@ class Employee(models.Model):
     is_hr = models.BooleanField(default=False)
     # education = models.ForeignKey(Education, related_name='employees', on_delete=models.CASCADE, null=True)
 
-    # profile_picture = models.ImageField(
-    #     null=True,
-    #     blank=True
-    # )
+    profile_picture = models.ImageField(
+        null=True,
+        blank=True
+    )
     # fb_link = models.URLField(blank=True, null=True)
     # twitter_link = models.URLField(blank=True, null=True)
     # linked_in_link = models.URLField(blank=True, null=True)

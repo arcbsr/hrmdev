@@ -7,12 +7,15 @@ from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.response import Response
 from zk import ZK, const
-
+from ..models.attendance import Attendance
+from django.forms.models import model_to_dict
+from api.views import employee
+import json
 
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'profile_picture')
+        fields = ('id', 'first_name', 'last_name', 'email', 'id_number')
 
 
 class RequestedKPISerializer(serializers.ModelSerializer):
@@ -120,60 +123,17 @@ class GetDataZK(APIView):
 
     def post(self, request):
         print(request.data)
-        # conn = None
-        # zk = ZK('159.65.217.206', port=4370, timeout=5, password=0, force_udp=False, ommit_ping=False)
-        # try:
-        #     # connect to device
-        #     conn = zk.connect()
-        #     # disable device, this method ensures no activity on the device while the process is run
-        #     conn.disable_device()
-        #     # another commands will be here!
-        #     # Example: Get All Users
-        #     users = conn.get_users()
-        #     for user in users:
-        #         privilege = 'User'
-        #         if user.privilege == const.USER_ADMIN:
-        #             privilege = 'Admin'
-        #         print ('+ UID #{}'.format(user.uid))
-        #         print ('  Name       : {}'.format(user.name))
-        #         print ('  Privilege  : {}'.format(privilege))
-        #         print ('  Password   : {}'.format(user.password))
-        #         print ('  Group ID   : {}'.format(user.group_id))
-        #         print ('  User  ID   : {}'.format(user.user_id))
-        #     return Response({"connection": "Connected to ZKTecho and found data..."})
-        #     # Test Voice: Say Thank You
-        #     conn.test_voice()
-        #     # re-enable device after all commands already executed
-        #     conn.enable_device()
-        # except Exception as e:
-        #     print ("Process terminate : {}".format(e))
-        # finally:
-        #     if conn:
-        #         conn.disconnect()
-        return Response({"message": request.data})
+        emp = Employee.objects.all()
+        new_employee_list = []
+        for employee in emp:
+            new_employee_list.append(EmployeeSerializer(employee).data)
+        return Response({"message": {"lastsaved":"2022-08-15 00:00:00", "emp": new_employee_list}})
 
 
     def get(self, request): 
-        conn = None
-        zk = ZK('192.168.0.201', port=4370, timeout=5, password=0, force_udp=False, ommit_ping=False)
+        
         try:
-            # connect to device
-            conn = zk.connect()
-            # disable device, this method ensures no activity on the device while the process is run
-            conn.disable_device()
-            # another commands will be here!
-            # Example: Get All Users
-            users = conn.get_users()
-            for user in users:
-                privilege = 'User'
-                if user.privilege == const.USER_ADMIN:
-                    privilege = 'Admin'
-                print ('+ UID #{}'.format(user.uid))
-                print ('  Name       : {}'.format(user.name))
-                print ('  Privilege  : {}'.format(privilege))
-                print ('  Password   : {}'.format(user.password))
-                print ('  Group ID   : {}'.format(user.group_id))
-                print ('  User  ID   : {}'.format(user.user_id))
+            
             return Response({"connection": "Connected to ZKTecho and found data..."})
             # Test Voice: Say Thank You
             conn.test_voice()
@@ -181,8 +141,47 @@ class GetDataZK(APIView):
             conn.enable_device()
         except Exception as e:
             print ("Process terminate : {}".format(e))
-        finally:
-            if conn:
-                conn.disconnect()
+        
         return Response({"message": "KPI submit to manger"})
 
+class AddAttendanceFromZK(APIView):
+    permission_classes = []
+    authentication_classes = []
+
+    def post(self, request, format=None):
+        jtopy=json.dumps(request.data)
+        dict_json=json.loads(jtopy)
+        ds = []
+        for val in dict_json['data']:
+            print(val['emp_code'])
+            emp_id = val['emp_code'] 
+            emp = Employee.objects.filter(id_number = emp_id).order_by('id').first()
+            atnd = Attendance ()
+            atnd.employee = emp
+            atnd.lastdate = "2022-08-15 00:00:00"
+            atnd.terminal_sn = val['terminal_sn']
+            atnd.terminal_name = val['terminal_alias']
+            if val['punch_state'] == "0":
+                atnd.intime = val['punch_time']
+            elif val['punch_state'] == "1":
+                atnd.outtime = val['punch_time']
+            ds.append(AttendanceSerializer(atnd).data)
+            atnd.save()
+
+        return Response({"message":  ds})
+
+class EmployeeSerializerInShort(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ('id', 'first_name', 'last_name', 'email', 'id_number')
+class AttendanceSerializer(serializers.ModelSerializer):
+    employee = EmployeeSerializerInShort(read_only=True)
+
+    class Meta:
+        model = Attendance
+        extra_kwargs = { 
+            'intime': {'required': False},
+            'outtime': {'required': False},
+            'lastdate': {'required': False} 
+        }
+        fields = "__all__"

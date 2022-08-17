@@ -1,6 +1,6 @@
 import json
 from rest_framework import serializers
-from api.models import Attendance
+from api.models import Attendance, Employee
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.utils import model_meta
@@ -8,9 +8,13 @@ from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.response import Response
 
-
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ('id', 'first_name', 'last_name', 'email', 'id_number')
 
 class AttendanceSerializer(serializers.ModelSerializer):
+    employee = EmployeeSerializer(read_only=True)
     class Meta:
         model = Attendance
         fields = "__all__"
@@ -67,13 +71,16 @@ class GetRepotFP(APIView):
         
         limit = request.GET.get('n') or 50
         reports = []
-        for x in range(int(limit)):
-            attn = Attendance()
-            attn.employee = "Rajon" + str(x)
-            attn.department = "Science"
-            attn.intime = "10:12"
-            attn.outtime = "10:12"
-            reports.append(AttendanceSerializer(attn).data)
+        atndnc = Attendance.objects.all();
+        # for x in range(int(limit)):
+        #     attn = Attendance()
+        #     attn.employee = "Rajon" + str(x)
+        #     attn.department = "Science"
+        #     attn.intime = "10:12"
+        #     attn.outtime = "10:12"
+        for atn in atndnc:
+            reports.append(AttendanceSerializer(atn).data)
         
         
-        return Response({"reports": reports})
+        return Response({"reports": "Success"})
+

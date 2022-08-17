@@ -1,6 +1,6 @@
 from django.urls import path, include
 from api.views import EmployeeViewSet, LoginView, ChangePasswordView, ProfileView, ManagerView, DepartmentViewSet, \
-    LeaveViewSet, KPIViewSet, RequestedKPIViewSet, RequestedLeaveViewSet, ForgotPasswordView,SubmitKPIView, GetDataZK, GetRepotFP
+    LeaveViewSet, KPIViewSet, RequestedKPIViewSet, RequestedLeaveViewSet, ForgotPasswordView,SubmitKPIView, GetDataZK, GetRepotFP, AddAttendanceFromZK
 from rest_framework import routers
 
 router = routers.DefaultRouter(trailing_slash=True)
@@ -20,6 +20,7 @@ urlpatterns = [
     path('forgot_password', ForgotPasswordView.as_view()),
     path('submit_kpi',SubmitKPIView.as_view()),
     path('zksync',GetDataZK.as_view()),
+    path('updzkdata',AddAttendanceFromZK.as_view()),
     path('att_report/',GetRepotFP.as_view()),
 
 ]

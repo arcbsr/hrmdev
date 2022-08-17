@@ -59,7 +59,6 @@ class ChangePasswordView(UpdateAPIView):
                 'code': status.HTTP_200_OK,
                 'message': 'Password updated successfully',
             }
-
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
