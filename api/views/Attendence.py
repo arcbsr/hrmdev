@@ -82,5 +82,5 @@ class GetRepotFP(APIView):
             reports.append(AttendanceSerializer(atn).data)
         
         
-        return Response({"reports": atn})
+        return Response({"reports": reports})
 
