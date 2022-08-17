@@ -168,7 +168,7 @@ class AddAttendanceFromZK(APIView):
             ds.append(AttendanceSerializer(atnd).data)
             atnd.save()
 
-        return Response({"message":  ds})
+        return Response({"message":  "success"})
 
 class EmployeeSerializerInShort(serializers.ModelSerializer):
     class Meta:
