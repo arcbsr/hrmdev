@@ -97,7 +97,7 @@ DATABASES = {
             'NAME': 'hrmdb',
             'USER': 'hrmuser',
             'PASSWORD': 'arc43211',
-            'HOST': '157.245.240.224',
+            'HOST': '127.0.20.1',
             'PORT': '5432',
         }
     }
