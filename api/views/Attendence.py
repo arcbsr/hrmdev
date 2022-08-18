@@ -80,7 +80,7 @@ class GetRepotFP(APIView):
     authentication_classes = []
     def get(self, request):
         
-        limit = int(request.GET.get('n')) or 20
+        limit = int(request.GET.get('n') or 20)
         datee = request.GET.get('date') or ""
         try:
             if datee != datetime.strptime(datee, "%Y-%m-%d").strftime('%Y-%m-%d'):
@@ -92,7 +92,7 @@ class GetRepotFP(APIView):
             today = date.today()
             datee = today.strftime("%Y-%m-%d")
 
-        page = int(request.GET.get('pager')) or 0
+        page = int(request.GET.get('pager') or 0)
         offset = page * limit
         reports = []
         # for x in range(int(limit)):
