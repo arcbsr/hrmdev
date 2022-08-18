@@ -92,7 +92,7 @@ class GetRepotFP(APIView):
             today = date.today()
             datee = today.strftime("%Y-%m-%d")
 
-        page = int(request.GET.get('page')) or 0
+        page = int(request.GET.get('pager')) or 0
         offset = page * limit
         reports = []
         # for x in range(int(limit)):
