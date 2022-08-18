@@ -7,7 +7,7 @@ from rest_framework.utils import model_meta
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.response import Response
-from datetime import datetime
+from datetime import datetime, date
 from django.core.exceptions import ValidationError
 
 
@@ -84,9 +84,13 @@ class GetRepotFP(APIView):
         datee = request.GET.get('date') or ""
         try:
             if datee != datetime.strptime(datee, "%Y-%m-%d").strftime('%Y-%m-%d'):
-                return Response({ "error":"Incorrect data format, should be YYYY-MM-DD"})
+                # return Response({ "error":"Incorrect data format, should be YYYY-MM-DD"})
+                today = date.today()
+                datee = today.strftime("%Y-%m-%d")
         except ValueError:
-            return Response({ "error":"Incorrect data format, should be YYYY-MM-DD"})
+            # return Response({ "error":"Incorrect data format, should be YYYY-MM-DD"})
+            today = date.today()
+            datee = today.strftime("%Y-%m-%d")
 
         page = int(request.GET.get('page')) or 0
         offset = page * limit
