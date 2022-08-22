@@ -95,7 +95,7 @@ DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'hrmdb',
-            'USER': 'hrmuser',
+            'USER': 'myprojectuser',
             'PASSWORD': 'arc43211',
             'HOST': '167.172.131.163',
             'PORT': '5432',
