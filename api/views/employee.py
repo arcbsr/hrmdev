@@ -122,10 +122,12 @@ class EmployeeCreateUpdateSerializer(serializers.ModelSerializer):
             username=str(uuid.uuid4()),
             password=password
         )
-
-        employee = Employee(user=user, **validated_data)
-        employee.clean()
-        employee.save()
+        try:
+            employee = Employee(user=user, **validated_data)
+            employee.clean()
+            employee.save()
+        except Exception as e:
+            raise serializers.ValidationError({"error": [e.message]})
         for address_data in addresses_data:
             address_instance = Address(employee=employee, **address_data)
             try:
