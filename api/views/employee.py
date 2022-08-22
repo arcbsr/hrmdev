@@ -211,7 +211,7 @@ class EmployeeViewSet(
 class ManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id',
+        fields = ('id','user_id',
                   'first_name',
                   'last_name')
 
