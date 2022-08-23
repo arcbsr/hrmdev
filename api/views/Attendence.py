@@ -109,7 +109,12 @@ class GetRepotFP(APIView):
             datafound= False;
             innerValue = {}
             innerValue.update({"employee" : emp.first_name + " " + emp.last_name })
-            innerValue.update({"department" : emp.department.name})
+            innerValue.update({"id" : emp.id}) 
+            try:
+                innerValue.update({"department" : DepartmentSerializer(emp.department).data['name']})
+            except Exception:
+                innerValue.update({"department" : 'Error'})
+
             if len(atndnc) > 0:
                 datafound = True
             intime = ""
@@ -121,6 +126,7 @@ class GetRepotFP(APIView):
                     innerValue.update({"outtime" : atn.outtime})
                 innerValue.update({"terminal_sn" : atn.terminal_sn})
                 innerValue.update({"terminal_name" : atn.terminal_name})
+                
             
             if datafound:
                 reports.append(innerValue)
